@@ -1,0 +1,62 @@
+syntax = "proto3";
+package api_v1;
+option go_package = "github.com/tehzwen/api_v1";
+
+import "google/protobuf/timestamp.proto";
+
+service RealEstate {
+    rpc GetListings(GetListingsRequest) returns (GetListingsResponse) {}
+}
+
+message GetListingsRequest {
+    GetListingsFilter filter = 1;
+    string next_token = 2;
+    int32 limit = 3;
+}
+
+message GetListingsFilter {
+    repeated string cities = 1;
+    repeated string neighbourhoods = 2;
+    repeated string types = 3;
+    int32 min_price = 4;
+    int32 max_price = 5;
+    TimeSpan time_span = 6;
+}
+
+message TimeSpan {
+    google.protobuf.Timestamp since = 1;
+    google.protobuf.Timestamp until = 2;
+}
+
+message GetListingsResponse {
+    repeated Listing listings = 1;
+    string nextToken = 2;
+}
+
+message Listing {
+    int32 id = 1;
+    string address = 2;
+    int32 price = 3;
+    City city = 4;
+    Neighbourhood neighbourhood = 5;
+    ListingType type = 6;
+    google.protobuf.Timestamp added_date = 7;
+    google.protobuf.Timestamp last_updated = 8;
+    string mls_id = 9;
+    string url = 10;
+}
+
+message City {
+    int64 id = 1;
+    string name = 2;
+}
+
+message Neighbourhood {
+    int64 id = 1;
+    string name = 2;
+}
+
+message ListingType {
+    int64 id = 1;
+    string name = 2;
+}

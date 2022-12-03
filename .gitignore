@@ -1,0 +1,4 @@
+__pycache__
+.vscode
+local.secrets
+local-secrets.json

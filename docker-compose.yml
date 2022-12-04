@@ -1,0 +1,10 @@
+services:
+  backend:
+    build:
+      context: .
+    ports:
+      - "50051:50051"
+      - "9092:9092"
+    volumes:
+      - "./local-secrets.json:/home/app/local-secrets.json:ro"
+    restart: on-failure

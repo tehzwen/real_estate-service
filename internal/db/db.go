@@ -4,6 +4,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -17,6 +18,12 @@ const (
 	defaultMaxPrice     = 1000000
 	defaultMinPrice     = 0
 	defaultGetLimit     = 100
+)
+
+var (
+	ErrDecode = errors.New("unable to decode bytes")
+	ErrQuery  = errors.New("failed to query database")
+	ErrScan   = errors.New("failed to scan database rows")
 )
 
 // Worker is an interface that can be used to work with different database models

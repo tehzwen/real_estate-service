@@ -6,7 +6,6 @@ import (
 	"context"
 	"database/sql"
 	"encoding/base64"
-	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -110,21 +109,22 @@ func (p *PostgresWorker) GetListings(ctx context.Context, filter *GetListingsFil
 	if filter.PageToken != "" {
 		decoded, err := base64.StdEncoding.DecodeString(filter.PageToken)
 		if err != nil {
-			return nil, err
+			log.Printf("error: %v", err)
+			return nil, ErrDecode
 		}
 
 		// split on the comma to get the id & the date
 		values := strings.Split(string(decoded), ",")
-		fmt.Println(values)
-
 		t, err := strconv.Atoi(values[0])
 		if err != nil {
-			return nil, err
+			log.Printf("error: %v", err)
+			return nil, ErrDecode
 		}
 
 		id, err := strconv.Atoi(values[1])
 		if err != nil {
-			return nil, err
+			log.Printf("error: %v", err)
+			return nil, ErrDecode
 		}
 
 		query = selectListingsPaginateQuery
@@ -146,7 +146,8 @@ func (p *PostgresWorker) GetListings(ctx context.Context, filter *GetListingsFil
 		args...,
 	)
 	if err != nil {
-		return nil, err
+		log.Printf("error: %v", err)
+		return nil, ErrQuery
 	}
 	defer rows.Close()
 
@@ -170,13 +171,13 @@ func (p *PostgresWorker) GetListings(ctx context.Context, filter *GetListingsFil
 			&v.MlsID,
 			&v.URL,
 		); err != nil {
-			return nil, err
+			log.Printf("error: %v", err)
+			return nil, ErrScan
 		}
 
 		// necessary to convert between time.Time & int64.
 		v.AddedDate = time.Unix(addedTimeUnix, 0)
 		v.LastUpdated = time.Unix(updatedTimeUnix, 0)
-
 		listings = append(listings, v)
 	}
 

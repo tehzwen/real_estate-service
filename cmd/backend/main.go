@@ -18,6 +18,7 @@ import (
 	pb "github.com/tehzwen/real_estate-service/proto/golang"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 )
 
@@ -70,6 +71,7 @@ func (s *realEstateServer) GetListings(ctx context.Context, r *pb.GetListingsReq
 }
 
 func main() {
+	flag.Parse()
 	ctx := context.Background()
 
 	f, err := os.Open("local-secrets.json")
@@ -107,6 +109,7 @@ func main() {
 		DBWorker: d,
 	}
 	pb.RegisterRealEstateServer(grpcServer, service)
+	reflection.Register(grpcServer)
 	grpcMetrics.EnableHandlingTimeHistogram()
 	grpcMetrics.InitializeMetrics(grpcServer)
 

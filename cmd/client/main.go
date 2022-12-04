@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"time"
 
@@ -11,8 +12,14 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+var (
+	serverHost = flag.String("server_host", "localhost:50051", "Set the `host:port` to fetch from")
+)
+
 func main() {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	flag.Parse()
+	log.Printf("Connecting to %s", *serverHost)
+	conn, err := grpc.Dial(*serverHost, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Panic(err)
 	}

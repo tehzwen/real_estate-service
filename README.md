@@ -9,3 +9,7 @@ This project serves as both an example of gRPC server & client implementation bu
 - `/cmd` contains binaries (clients, server, etc).
 - `/internal` contains server internal (database, models, secret management).
 - `/proto` contains the base proto definition aswell as some generated code used by the go server.
+
+
+### Useful Commands
+`grpcurl -plaintext <server_host> describe` see https://github.com/fullstorydev/grpcurl for details

@@ -107,6 +107,7 @@ func main() {
 		DBWorker: d,
 	}
 	pb.RegisterRealEstateServer(grpcServer, service)
+	grpcMetrics.EnableHandlingTimeHistogram()
 	grpcMetrics.InitializeMetrics(grpcServer)
 
 	httpServer := &http.Server{Handler: promhttp.HandlerFor(reg, promhttp.HandlerOpts{}), Addr: fmt.Sprintf("0.0.0.0:%d", *metricsPort)}
